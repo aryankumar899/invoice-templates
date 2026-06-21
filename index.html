@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tax Invoice - HOTEL WHITE STONE</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    :root {
+      --border-color: #333;
+      --header-bg: #e8e8e8;
+      --text-color: #111;
+      --muted: #444;
+      --a4-width: 794px;
+      --content-padding: 10px;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 13px;
+      line-height: 1.4;
+      color: var(--text-color);
+      background: #eef1f6;
+    }
+
+    /* ── Website: button only ── */
+    .page-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 32px 20px;
+    }
+
+    .page-shell .brand {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #1a1a2e;
+      margin: 0;
+    }
+
+    .page-shell .subtitle {
+      font-size: 14px;
+      color: #555;
+      margin: 0 0 8px;
+    }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 32px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      background: #2563eb;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-download:hover { background: #1d4ed8; }
+    .btn-download:disabled { opacity: 0.7; cursor: wait; }
+    .btn-download svg { width: 20px; height: 20px; fill: currentColor; }
+
+    /* Hidden off-screen for PDF source — must stay opacity:1 for html2canvas */
+    .invoice-source {
+      position: fixed;
+      left: -9999px;
+      top: 0;
+      width: var(--a4-width);
+      opacity: 1;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .invoice-page {
+      width: var(--a4-width);
+      max-width: var(--a4-width);
+      background: #fff;
+      overflow: hidden;
+      display: block;
+      padding: 24px var(--content-padding) 28px;
+      box-sizing: border-box;
+    }
+
+    .doc-title {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .header-row {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 12px;
+      align-items: start;
+      border: 1px solid var(--border-color);
+      border-bottom: none;
+      padding: 18px 12px;
+    }
+
+    .logo { width: 95px; height: 95px; display: block; }
+
+    .hotel-info { text-align: right; }
+
+    .hotel-name {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 3px;
+    }
+
+    .hotel-address {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .hotel-contact, .hotel-gstin {
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid var(--border-color);
+      border-top: none;
+      border-bottom: none;
+    }
+
+    .two-col > div:first-child {
+      border-right: 1px solid var(--border-color);
+    }
+
+    .section-header {
+      background: var(--header-bg);
+      font-weight: 700;
+      font-size: 13px;
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .section-body {
+      padding: 14px 10px 16px;
+      font-size: 12.5px;
+      line-height: 1.75;
+    }
+
+    .section-body .customer-name {
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .detail-row { margin-bottom: 5px; }
+    .detail-row .key { font-weight: 600; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11.5px;
+      table-layout: fixed;
+    }
+
+    table th, table td {
+      border: 1px solid var(--border-color);
+      padding: 10px 5px;
+      vertical-align: middle;
+      word-wrap: break-word;
+    }
+
+    table th {
+      background: var(--header-bg);
+      font-weight: 700;
+      text-align: center;
+      font-size: 10.5px;
+    }
+
+    .text-right { text-align: right; }
+    .text-center { text-align: center; }
+    .text-left { text-align: left; }
+
+    .items-table {
+      border-left: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+      border-top: none;
+      border-bottom: none;
+    }
+
+    .items-table thead th {
+      font-size: 10px;
+      white-space: normal;
+      line-height: 1.3;
+      padding: 9px 3px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .items-table tbody tr:last-child td {
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .total-row td { font-weight: 700; background: #fafafa; }
+    .total-row .total-label { text-align: right; padding-right: 10px; }
+
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      border-left: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+      border-top: none;
+      border-bottom: none;
+      font-size: 10.5px;
+    }
+
+    .summary-table th,
+    .summary-table td {
+      border: 1px solid var(--border-color);
+      padding: 10px 5px;
+      vertical-align: middle;
+    }
+
+    .summary-table thead th {
+      background: var(--header-bg);
+      font-weight: 700;
+      text-align: center;
+      font-size: 10.5px;
+      border-top: none;
+    }
+
+    .summary-table tbody tr:last-child td {
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .summary-table .amt-label {
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .summary-table tr.amt-total td {
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .summary-table .empty-left {
+      border-top: none;
+      border-bottom: none;
+      background: #fff;
+    }
+
+    .words-section {
+      border-left: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+      border-top: none;
+      border-bottom: 1px solid var(--border-color);
+      padding: 18px 10px;
+      font-size: 12.5px;
+    }
+
+    .words-section .label { font-weight: 700; }
+
+    .words-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      overflow: hidden;
+    }
+
+    .words-text { flex: 1; min-width: 0; }
+    .payment-row { margin-top: 14px; }
+
+    .stamp-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .stamp-signature {
+      font-family: "Brush Script MT", "Segoe Script", cursive;
+      font-size: 26px;
+      color: #1a3a8a;
+    }
+
+    .stamp-circle {
+      width: 70px;
+      height: 70px;
+      border: 2px solid #1a3a8a;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 8px;
+      font-weight: 700;
+      color: #1a3a8a;
+      line-height: 1.2;
+    }
+
+    .footer-row {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr 0.9fr;
+      border: 1px solid var(--border-color);
+      border-top: none;
+    }
+
+    .footer-row > div {
+      padding: 18px 10px;
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    .footer-row > div:not(:last-child) {
+      border-right: 1px solid var(--border-color);
+    }
+
+    .footer-title {
+      font-weight: 700;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .footer-row ol { padding-left: 16px; margin: 0; }
+    .footer-row ol li { margin-bottom: 6px; }
+    .footer-row .label { font-weight: 600; }
+
+    .signatory-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .signatory-for {
+      font-weight: 600;
+      font-size: 11px;
+      margin-bottom: 12px;
+      align-self: flex-start;
+    }
+
+    .signatory-box {
+      width: 130px;
+      height: 62px;
+      border: 1px solid #ccc;
+      background: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 4px;
+    }
+
+    .signatory-name {
+      font-family: "Brush Script MT", "Segoe Script", cursive;
+      font-size: 22px;
+      color: #333;
+    }
+
+    .signatory-label { font-size: 10px; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <div class="page-shell">
+    <p class="brand">HOTEL WHITE STONE</p>
+    <p class="subtitle">Tax Invoice WS-2120</p>
+    <button class="btn-download" id="downloadBtn" type="button">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+      </svg>
+      Download Classic PDF
+    </button>
+    <a href="design-luxury.html" style="margin-top:10px;font-size:13px;color:#555;text-decoration:none;font-family:Arial,sans-serif;">Luxury hotel design &rarr;</a>
+  </div>
+
+  <div class="invoice-source">
+    <div class="invoice-page" id="invoice">
+
+      <div class="doc-title">Tax Invoice</div>
+
+      <div class="header-row">
+        <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="18" y="30" width="14" height="50" fill="#1a3a8a" rx="1"/>
+          <rect x="36" y="18" width="14" height="62" fill="#2a5cb8" rx="1"/>
+          <rect x="54" y="8" width="14" height="72" fill="#1a3a8a" rx="1"/>
+          <path d="M10 82 Q50 95 90 82" stroke="#c8a032" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M14 80 Q50 90 86 80" stroke="#d4b040" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="hotel-info">
+          <div class="hotel-name">HOTEL WHITE STONE</div>
+          <div class="hotel-address">OPP. LOHIYA DHARAM SHALA STATION ROAD GONDA</div>
+          <div class="hotel-contact">Phone no.: 7508501571, 9653025364 &nbsp; Email: whitestonegonda@gmail.com</div>
+          <div class="hotel-gstin">GSTIN: 09AFUPJ6548M2ZF, &nbsp; State: 09-Uttar Pradesh</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="section-header">Bill To</div>
+          <div class="section-body">
+            <div class="customer-name">RAVI TIWARI</div>
+            <div>E323 TRANSPORT NAGAR KANPUR ROAD,</div>
+            <div>Lucknow, Uttar Pradesh-226012, India</div>
+            <div class="detail-row"><span class="key">Contact No.:</span> 9792888524</div>
+            <div class="detail-row"><span class="key">GSTIN:</span> 09AAACC0444K1ZT</div>
+            <div class="detail-row"><span class="key">State:</span> 09-Uttar Pradesh</div>
+            <div class="detail-row"><span class="key">COMPANY :</span> CENTAUR PHARMA PVT LTD.</div>
+          </div>
+        </div>
+        <div>
+          <div class="section-header">Invoice Details</div>
+          <div class="section-body">
+            <div class="detail-row"><span class="key">Invoice No.:</span> WS-2120</div>
+            <div class="detail-row"><span class="key">Date:</span> 18-06-2026</div>
+            <div class="detail-row"><span class="key">Place of supply:</span> 09-Uttar Pradesh</div>
+            <div class="detail-row"><span class="key">CHK-IN TIME:</span> 07:00 PM</div>
+            <div class="detail-row"><span class="key">CHK-OUT TIME:</span> 08:46 AM</div>
+          </div>
+        </div>
+      </div>
+
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th style="width:4%">#</th>
+            <th style="width:22%">ITEM</th>
+            <th style="width:9%">HSN/ SAC</th>
+            <th style="width:11%">CHK-IN DATE</th>
+            <th style="width:11%">CHK-OUT DATE</th>
+            <th style="width:6%">DAYS</th>
+            <th style="width:11%">Price</th>
+            <th style="width:13%">GST</th>
+            <th style="width:13%">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-center">1</td>
+            <td class="text-left">Room No.110 (LUXURY AC)</td>
+            <td class="text-center">996311</td>
+            <td class="text-center">15/06/2026</td>
+            <td class="text-center">18/06/2026</td>
+            <td class="text-center">3</td>
+            <td class="text-right">&#8377; 1,200.00</td>
+            <td class="text-right">&#8377; 180.00 (5%)</td>
+            <td class="text-right">&#8377; 3,780.00</td>
+          </tr>
+          <tr class="total-row">
+            <td colspan="7" class="total-label">Total</td>
+            <td class="text-right">&#8377; 180.00</td>
+            <td class="text-right">&#8377; 3,780.00</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th style="width:15%">Tax type</th>
+            <th style="width:26%">Taxable amount</th>
+            <th style="width:11%">Rate</th>
+            <th style="width:15%">Tax amount</th>
+            <th colspan="2">Amounts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-left">SGST</td>
+            <td class="text-right">&#8377; 3,600.00</td>
+            <td class="text-center">2.5%</td>
+            <td class="text-right">&#8377; 90.00</td>
+            <td class="amt-label">Sub Total</td>
+            <td class="text-right">&#8377; 3,780.00</td>
+          </tr>
+          <tr class="amt-total">
+            <td class="text-left">CGST</td>
+            <td class="text-right">&#8377; 3,600.00</td>
+            <td class="text-center">2.5%</td>
+            <td class="text-right">&#8377; 90.00</td>
+            <td class="amt-label">Total</td>
+            <td class="text-right">&#8377; 3,780.00</td>
+          </tr>
+          <tr>
+            <td colspan="4" class="empty-left"></td>
+            <td class="amt-label">Received</td>
+            <td class="text-right">&#8377; 3,780.00</td>
+          </tr>
+          <tr>
+            <td colspan="4" class="empty-left"></td>
+            <td class="amt-label">Balance</td>
+            <td class="text-right">&#8377; 0.00</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="words-section">
+        <div class="words-inner">
+          <div class="words-text">
+            <div><span class="label">Invoice Amount In Words:</span> Three Thousand Seven Hundred Eighty Rupees only</div>
+            <div class="payment-row"><span class="label">Payment mode:</span> WHITE STONE</div>
+          </div>
+          <div class="stamp-area">
+            <span class="stamp-signature">Ashish</span>
+            <div class="stamp-circle">HOTEL<br/>WHITE<br/>STONE</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-row">
+        <div>
+          <div class="footer-title">Bank Details</div>
+          <div><span class="label">Name:</span> BANK OF MAHARASHTRA, GONDA</div>
+          <div><span class="label">Account No.:</span> 60391127456</div>
+          <div><span class="label">IFSC code:</span> MAHB0001691</div>
+          <div><span class="label">Account holder's name:</span> WHITE STONE</div>
+        </div>
+        <div>
+          <div class="footer-title">Terms and Conditions</div>
+          <ol>
+            <li>All disputes are subject to Gonda jurisdiction.</li>
+            <li>HOTEL CHK-IN TIME - 12:30 PM, HOTEL CHK-OUT TIME - 11:00 AM.</li>
+            <li>Thank you for choosing HOTEL WHITE STONE for your recent stay in GONDA.</li>
+          </ol>
+        </div>
+        <div class="signatory-block">
+          <div class="signatory-for">For : HOTEL WHITE STONE</div>
+          <div class="signatory-box">
+            <span class="signatory-name">Ashish</span>
+          </div>
+          <div class="signatory-label">Authorized Signatory</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    (function () {
+      var btn = document.getElementById('downloadBtn');
+      var invoice = document.getElementById('invoice');
+
+      var PAGE_W = 210;
+      var PAGE_H = 297;
+      var MARGIN = 10;
+
+      function fitImageToA4(canvas) {
+        var usableW = PAGE_W - MARGIN * 2;
+        var usableH = PAGE_H - MARGIN * 2;
+        var imgW = usableW;
+        var imgH = (canvas.height * imgW) / canvas.width;
+
+        if (imgH < usableH) {
+          var upH = usableH;
+          var upW = (canvas.width * upH) / canvas.height;
+          if (upW <= usableW) {
+            imgH = upH;
+            imgW = upW;
+          }
+        } else if (imgH > usableH) {
+          imgH = usableH;
+          imgW = (canvas.width * imgH) / canvas.height;
+        }
+
+        return {
+          x: (PAGE_W - imgW) / 2,
+          y: MARGIN,
+          w: imgW,
+          h: imgH
+        };
+      }
+
+      btn.addEventListener('click', function () {
+        if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
+          alert('PDF libraries failed to load. Please check your internet connection and refresh.');
+          return;
+        }
+
+        var originalHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.textContent = 'Generating PDF…';
+
+        var host = document.createElement('div');
+        host.style.cssText =
+          'position:fixed;left:0;top:0;width:794px;background:#fff;opacity:1;z-index:-1;overflow:hidden;pointer-events:none;';
+
+        var clone = invoice.cloneNode(true);
+        clone.removeAttribute('id');
+        clone.style.cssText = 'width:794px;max-width:794px;padding:24px 10px 28px;box-sizing:border-box;background:#fff;';
+        host.appendChild(clone);
+        document.body.appendChild(host);
+
+        html2canvas(clone, {
+          scale: 2,
+          backgroundColor: '#ffffff',
+          useCORS: true,
+          logging: false,
+          scrollX: 0,
+          scrollY: 0
+        }).then(function (canvas) {
+          document.body.removeChild(host);
+
+          if (canvas.width < 10 || canvas.height < 10) {
+            throw new Error('Capture failed — empty canvas.');
+          }
+
+          var jsPDF = window.jspdf.jsPDF;
+          var pdf = new jsPDF({
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait',
+            compress: true
+          });
+
+          var fit = fitImageToA4(canvas);
+
+          pdf.addImage(
+            canvas.toDataURL('image/jpeg', 0.95),
+            'JPEG',
+            fit.x,
+            fit.y,
+            fit.w,
+            fit.h,
+            undefined,
+            'FAST'
+          );
+          pdf.save('Hotel-White-Stone-Tax-Invoice-WS-2120.pdf');
+        }).catch(function (err) {
+          if (host.parentNode) document.body.removeChild(host);
+          console.error(err);
+          alert('PDF generation failed: ' + err.message);
+        }).finally(function () {
+          btn.disabled = false;
+          btn.innerHTML = originalHtml;
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

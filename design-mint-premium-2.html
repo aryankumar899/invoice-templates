@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mint Premium II - Mint Gradient Header</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    :root{--mint:#4ce1b6;--mint-l:#8ef0d4;--mint-d:#2ec99a;--dark:#0d2b24;--dark-l:#1a4a3d;--cream:#f4fdfa;--text:#1a1a1a;--muted:#5a5a5a;--a4:794px}
+    html,body{margin:0}
+    body{font-family:Georgia,serif;background:linear-gradient(145deg,#0d2b24,#1a4a3d);min-height:100vh}
+    .shell{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:32px}
+    .shell .brand{font-size:24px;color:var(--mint);letter-spacing:3px;margin:0}
+    .shell p{color:rgba(255,255,255,.6);font-size:13px;margin:0;font-family:Arial}
+    .btn{padding:14px 32px;background:var(--mint);color:var(--dark);border:none;border-radius:4px;font-weight:700;font-size:14px;cursor:pointer;font-family:Arial}
+    .nav{color:rgba(255,255,255,.45);font-size:12px;text-decoration:none;font-family:Arial;margin-top:6px}
+    .src{position:fixed;left:-9999px;top:0;width:var(--a4);opacity:1;z-index:-1;overflow:hidden}
+    .page{width:var(--a4);background:var(--cream);overflow:hidden;font-family:Georgia,serif}
+    .hdr{background:linear-gradient(135deg,var(--mint),var(--mint-l) 45%,var(--mint-d));color:var(--dark);padding:20px 22px 18px}
+    .hdr::after{content:"";display:block;height:4px;background:var(--dark);margin-top:14px;border-radius:2px}
+    .hdr-in{display:grid;grid-template-columns:84px 1fr auto;gap:14px;align-items:center}
+    .logo{width:76px;height:76px;background:rgba(13,43,36,.08);border:2px solid var(--dark);border-radius:8px;display:flex;align-items:center;justify-content:center;padding:6px}
+    .hname{font-size:22px;letter-spacing:3px;text-transform:uppercase;color:var(--dark);margin-bottom:3px}
+    .htag{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(13,43,36,.65);font-family:Arial}
+    .haddr{font-size:10px;color:rgba(13,43,36,.85);margin-top:5px;font-family:Arial;line-height:1.45}
+    .badge{text-align:right;font-family:Arial}
+    .badge .t{font-size:18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dark)}
+    .badge .n{font-size:12px;color:var(--dark-l);margin-top:3px;font-weight:600}
+    .cbar{background:var(--dark);padding:7px 22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:5px;font-family:Arial;font-size:10px;color:rgba(255,255,255,.75)}
+    .cbar span{color:var(--mint);font-weight:600}
+    .body{padding:18px 18px 14px;background:var(--cream)}
+    .cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+    .card{background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 2px 8px rgba(13,43,36,.08);border:1px solid rgba(76,225,182,.3)}
+    .card-h{background:var(--dark);color:var(--mint);font-family:Arial;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:7px 11px}
+    .card-b{padding:11px 12px;font-family:Arial;font-size:11px;line-height:1.6}
+    .card-b .gn{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:3px}
+    .card-b .k{font-weight:600;color:var(--dark-l)}
+    .stay{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
+    .stay-i{background:#fff;border-left:3px solid var(--dark);padding:9px 11px;border-radius:0 4px 4px 0;box-shadow:0 1px 4px rgba(0,0,0,.05);font-family:Arial}
+    .stay-i .lb{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:2px}
+    .stay-i .vl{font-size:12px;font-weight:700;color:var(--dark)}
+    .tw{background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 2px 8px rgba(13,43,36,.08);margin-bottom:12px;border:1px solid rgba(76,225,182,.25)}
+    table{width:100%;border-collapse:collapse;font-family:Arial;font-size:10.5px;table-layout:fixed}
+    th{background:var(--dark);color:var(--mint);font-size:9.5px;font-weight:700;text-transform:uppercase;padding:8px 4px;text-align:center}
+    td{padding:8px 4px;border-bottom:1px solid #e0f5ee;vertical-align:middle;word-wrap:break-word}
+    tbody tr:last-child td{border-bottom:none}
+    .tr-tot td{background:rgba(76,225,182,.15);font-weight:700;color:var(--dark);border-top:2px solid var(--dark)}
+    .sum td{font-size:10px;padding:7px 4px}
+    .sum .al{font-weight:600;color:var(--dark)}
+    .sum tr.gt td{background:var(--dark);color:var(--mint);font-weight:700;font-size:11px}
+    .sum .el{background:#fff;border-bottom:1px solid #e0f5ee}
+    .tr{text-align:right}.tc{text-align:center}.tl{text-align:left}
+    .words{background:#fff;border-radius:6px;padding:12px 14px;margin-bottom:12px;border:1px solid rgba(76,225,182,.3);display:flex;justify-content:space-between;gap:10px;font-family:Arial;font-size:11px;line-height:1.55}
+    .words .lb{font-weight:700;color:var(--dark)}
+    .words .pay{margin-top:6px}
+    .stamp{display:flex;align-items:center;gap:7px;flex-shrink:0}
+    .stamp .sg{font-family:cursive;font-size:22px;color:var(--dark-l)}
+    .stamp .ci{width:64px;height:64px;border:2px solid var(--dark-l);border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;font-size:7px;font-weight:700;color:var(--dark-l);line-height:1.2;font-family:Arial}
+    .foot{display:grid;grid-template-columns:1fr 1.3fr .85fr;gap:10px}
+    .fb{background:#fff;border-radius:6px;padding:11px 12px;border-top:3px solid var(--mint);box-shadow:0 2px 6px rgba(0,0,0,.05);font-family:Arial;font-size:10px;line-height:1.6}
+    .fb .ft{font-size:11px;font-weight:700;color:var(--dark);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+    .fb .k{font-weight:600;color:var(--dark)}
+    .fb ol{padding-left:14px;margin:0}
+    .sgn{display:flex;flex-direction:column;align-items:center;text-align:center}
+    .sgn .fr{font-weight:600;font-size:10px;color:var(--dark);align-self:flex-start;margin-bottom:6px}
+    .sgn-b{width:115px;height:48px;border:1px dashed var(--mint);background:var(--cream);display:flex;align-items:center;justify-content:center;border-radius:4px;margin-bottom:3px}
+    .sgn-b span{font-family:cursive;font-size:18px;color:var(--dark)}
+    .sgn .sl{font-size:9px;font-weight:600;color:var(--muted)}
+    .bot{background:var(--dark);color:rgba(255,255,255,.55);text-align:center;font-family:Arial;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:7px;margin-top:12px}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <p class="brand">Mint Premium II</p>
+    <p>Mint gradient header &middot; dark table headers</p>
+    <button class="btn" id="dl">Download PDF</button>
+    <a class="nav" href="designs.html">&larr; All designs</a>
+  </div>
+  <div class="src"><div class="page" id="inv">
+    <div class="hdr"><div class="hdr-in">
+      <div class="logo"><svg viewBox="0 0 100 100" width="60" height="60"><rect x="18" y="30" width="14" height="50" fill="#0d2b24" rx="1"/><rect x="36" y="18" width="14" height="62" fill="#1a4a3d" rx="1"/><rect x="54" y="8" width="14" height="72" fill="#0d2b24" rx="1"/><path d="M10 82 Q50 95 90 82" stroke="#0d2b24" stroke-width="3" fill="none"/></svg></div>
+      <div><div class="hname">Hotel White Stone</div><div class="htag">Premium Stay &middot; Gonda, UP</div><div class="haddr">Opp. Lohiya Dharam Shala, Station Road, Gonda</div></div>
+      <div class="badge"><div class="t">Tax Invoice</div><div class="n"># WS-2120</div></div>
+    </div></div>
+    <div class="cbar"><div><span>Phone:</span> 7508501571, 9653025364</div><div><span>Email:</span> whitestonegonda@gmail.com</div><div><span>GSTIN:</span> 09AFUPJ6548M2ZF | <span>State:</span> 09-UP</div></div>
+    <div class="body">
+      <div class="cards">
+        <div class="card"><div class="card-h">Bill To</div><div class="card-b"><div class="gn">RAVI TIWARI</div>E323 TRANSPORT NAGAR KANPUR ROAD, Lucknow, UP-226012<br><span class="k">Contact:</span> 9792888524<br><span class="k">GSTIN:</span> 09AAACC0444K1ZT<br><span class="k">State:</span> 09-UP<br><span class="k">Company:</span> CENTAUR PHARMA PVT LTD.</div></div>
+        <div class="card"><div class="card-h">Invoice Details</div><div class="card-b"><span class="k">Invoice No.:</span> WS-2120<br><span class="k">Date:</span> 18-06-2026<br><span class="k">Place of supply:</span> 09-UP<br><span class="k">CHK-IN:</span> 07:00 PM<br><span class="k">CHK-OUT:</span> 08:46 AM</div></div>
+      </div>
+      <div class="stay">
+        <div class="stay-i"><div class="lb">Room</div><div class="vl">No. 110 — Luxury AC</div></div>
+        <div class="stay-i"><div class="lb">Stay Duration</div><div class="vl">15/06/2026 → 18/06/2026 (3 Days)</div></div>
+        <div class="stay-i"><div class="lb">Grand Total</div><div class="vl">&#8377; 3,780.00</div></div>
+      </div>
+      <div class="tw"><table><thead><tr><th style="width:4%">#</th><th style="width:22%">Item</th><th style="width:9%">HSN</th><th style="width:11%">Chk-In</th><th style="width:11%">Chk-Out</th><th style="width:6%">Days</th><th style="width:11%">Price</th><th style="width:13%">GST</th><th style="width:13%">Amount</th></tr></thead><tbody>
+        <tr><td class="tc">1</td><td class="tl">Room No.110 (LUXURY AC)</td><td class="tc">996311</td><td class="tc">15/06/2026</td><td class="tc">18/06/2026</td><td class="tc">3</td><td class="tr">&#8377; 1,200.00</td><td class="tr">&#8377; 180.00 (5%)</td><td class="tr">&#8377; 3,780.00</td></tr>
+        <tr class="tr-tot"><td colspan="7" class="tr">Total</td><td class="tr">&#8377; 180.00</td><td class="tr">&#8377; 3,780.00</td></tr>
+      </tbody></table></div>
+      <div class="tw"><table class="sum"><thead><tr><th style="width:15%">Tax Type</th><th style="width:26%">Taxable</th><th style="width:11%">Rate</th><th style="width:15%">Tax Amt</th><th colspan="2">Amounts</th></tr></thead><tbody>
+        <tr><td class="tl">SGST</td><td class="tr">&#8377; 3,600.00</td><td class="tc">2.5%</td><td class="tr">&#8377; 90.00</td><td class="al">Sub Total</td><td class="tr">&#8377; 3,780.00</td></tr>
+        <tr class="gt"><td class="tl">CGST</td><td class="tr">&#8377; 3,600.00</td><td class="tc">2.5%</td><td class="tr">&#8377; 90.00</td><td class="al">Total</td><td class="tr">&#8377; 3,780.00</td></tr>
+        <tr><td colspan="4" class="el"></td><td class="al">Received</td><td class="tr">&#8377; 3,780.00</td></tr>
+        <tr><td colspan="4" class="el"></td><td class="al">Balance</td><td class="tr">&#8377; 0.00</td></tr>
+      </tbody></table></div>
+      <div class="words"><div><div><span class="lb">Amount in Words:</span> Three Thousand Seven Hundred Eighty Rupees only</div><div class="pay"><span class="lb">Payment Mode:</span> WHITE STONE</div></div><div class="stamp"><span class="sg">Ashish</span><div class="ci">HOTEL<br/>WHITE<br/>STONE</div></div></div>
+      <div class="foot">
+        <div class="fb"><div class="ft">Bank Details</div><span class="k">Bank:</span> BOM, GONDA<br><span class="k">A/C:</span> 60391127456<br><span class="k">IFSC:</span> MAHB0001691<br><span class="k">Holder:</span> WHITE STONE</div>
+        <div class="fb"><div class="ft">Terms &amp; Conditions</div><ol><li>Gonda jurisdiction applies.</li><li>CHK-IN 12:30 PM | OUT 11 AM.</li><li>Thank you for choosing HOTEL WHITE STONE.</li></ol></div>
+        <div class="fb sgn"><div class="fr">For : HOTEL WHITE STONE</div><div class="sgn-b"><span>Ashish</span></div><div class="sl">Authorized Signatory</div></div>
+      </div>
+    </div>
+    <div class="bot">Thank you for your patronage · Hotel White Stone, Gonda</div>
+  </div></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    document.getElementById('dl').onclick=function(){var b=this,i=document.getElementById('inv'),h=document.createElement('div');h.style.cssText='position:fixed;left:0;top:0;width:794px;opacity:1;z-index:-1;overflow:hidden';var c=i.cloneNode(true);c.removeAttribute('id');h.appendChild(c);document.body.appendChild(h);b.disabled=true;b.textContent='Generating…';html2canvas(c,{scale:2,backgroundColor:'#f4fdfa',useCORS:true,logging:false}).then(function(cv){document.body.removeChild(h);var p=new jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait'});var uW=190,uH=277,iW=uW,iH=cv.height*iW/cv.width;if(iH<uH){var u=uH,w=cv.width*u/cv.height;if(w<=uW){iH=u;iW=w}}else{iH=uH;iW=cv.width*iH/cv.height}p.addImage(cv.toDataURL('image/jpeg',.95),'JPEG',(210-iW)/2,10,iW,iH);p.save('Hotel-White-Stone-Mint-Premium-2-WS-2120.pdf')}).catch(function(e){if(h.parentNode)document.body.removeChild(h);alert(e.message)}).finally(function(){b.disabled=false;b.textContent='Download PDF'})};
+  </script>
+</body>
+</html>

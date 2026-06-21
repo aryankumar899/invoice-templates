@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luxury Tax Invoice - HOTEL WHITE STONE</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --navy: #0c1a3a;
+      --navy-light: #152952;
+      --gold: #c9a227;
+      --gold-light: #e8c96a;
+      --cream: #faf8f3;
+      --text: #1a1a1a;
+      --muted: #5a5a5a;
+      --a4-width: 794px;
+    }
+
+    html, body { margin: 0; padding: 0; }
+
+    body {
+      font-family: Georgia, "Times New Roman", serif;
+      background: linear-gradient(145deg, #0c1a3a 0%, #1a2744 50%, #0f1829 100%);
+      min-height: 100vh;
+      color: var(--text);
+    }
+
+    .page-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 32px 20px;
+    }
+
+    .page-shell .brand {
+      font-size: 26px;
+      font-weight: 400;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin: 0;
+    }
+
+    .page-shell .subtitle {
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+      letter-spacing: 2px;
+      margin: 0;
+    }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 36px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--navy);
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(201, 162, 39, 0.4);
+      font-family: Arial, sans-serif;
+    }
+
+    .btn-download:hover { filter: brightness(1.08); }
+    .btn-download:disabled { opacity: 0.7; cursor: wait; }
+    .btn-download svg { width: 18px; height: 18px; fill: currentColor; }
+
+    .nav-link {
+      margin-top: 8px;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+    }
+
+    .nav-link:hover { color: var(--gold-light); }
+
+    .invoice-source {
+      position: fixed;
+      left: -9999px;
+      top: 0;
+      width: var(--a4-width);
+      opacity: 1;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .invoice-page {
+      width: var(--a4-width);
+      background: var(--cream);
+      overflow: hidden;
+      padding: 0;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    /* ── Luxury header band ── */
+    .lux-header {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      color: #fff;
+      padding: 22px 24px 20px;
+      position: relative;
+    }
+
+    .lux-header::after {
+      content: "";
+      display: block;
+      height: 4px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+      margin-top: 16px;
+    }
+
+    .lux-header-inner {
+      display: grid;
+      grid-template-columns: 88px 1fr auto;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .lux-logo {
+      width: 80px;
+      height: 80px;
+      background: rgba(255,255,255,0.08);
+      border: 2px solid var(--gold);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+    }
+
+    .lux-hotel-name {
+      font-size: 24px;
+      font-weight: 400;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 4px;
+    }
+
+    .lux-tagline {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      font-family: Arial, sans-serif;
+    }
+
+    .lux-address {
+      font-size: 10.5px;
+      color: rgba(255,255,255,0.8);
+      margin-top: 6px;
+      font-family: Arial, sans-serif;
+      line-height: 1.5;
+    }
+
+    .lux-invoice-badge {
+      text-align: right;
+      font-family: Arial, sans-serif;
+    }
+
+    .lux-invoice-badge .badge-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #fff;
+      text-transform: uppercase;
+    }
+
+    .lux-invoice-badge .badge-no {
+      font-size: 12px;
+      color: var(--gold-light);
+      margin-top: 4px;
+      letter-spacing: 1px;
+    }
+
+    .lux-contact-bar {
+      background: var(--navy-light);
+      padding: 8px 24px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .lux-contact-bar span { color: var(--gold-light); font-weight: 600; }
+
+    /* ── Info cards ── */
+    .lux-body { padding: 20px 20px 16px; }
+
+    .lux-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .lux-card {
+      background: #fff;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(12,26,58,0.08);
+      border: 1px solid rgba(201,162,39,0.25);
+    }
+
+    .lux-card-head {
+      background: var(--navy);
+      color: var(--gold-light);
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 8px 12px;
+    }
+
+    .lux-card-body {
+      padding: 12px 14px;
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    .lux-card-body .guest-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .lux-card-body .row { margin-bottom: 3px; }
+    .lux-card-body .key { font-weight: 600; color: var(--navy); }
+
+    /* ── Stay highlight ── */
+    .lux-stay-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .lux-stay-item {
+      background: #fff;
+      border-left: 3px solid var(--gold);
+      padding: 10px 12px;
+      border-radius: 0 4px 4px 0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      font-family: Arial, sans-serif;
+    }
+
+    .lux-stay-item .label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .lux-stay-item .value {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    /* ── Tables ── */
+    .lux-table-wrap {
+      background: #fff;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(12,26,58,0.08);
+      margin-bottom: 14px;
+      border: 1px solid rgba(201,162,39,0.2);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: Arial, sans-serif;
+      font-size: 10.5px;
+      table-layout: fixed;
+    }
+
+    table th {
+      background: var(--navy);
+      color: var(--gold-light);
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 9px 5px;
+      text-align: center;
+    }
+
+    table td {
+      padding: 9px 5px;
+      border-bottom: 1px solid #ebe8e0;
+      vertical-align: middle;
+      word-wrap: break-word;
+    }
+
+    table tbody tr:last-child td { border-bottom: none; }
+
+    .text-right { text-align: right; }
+    .text-center { text-align: center; }
+    .text-left { text-align: left; }
+
+    .lux-total-row td {
+      background: rgba(201,162,39,0.12);
+      font-weight: 700;
+      color: var(--navy);
+      border-top: 2px solid var(--gold);
+    }
+
+    .lux-summary td { font-size: 10px; padding: 8px 5px; }
+    .lux-summary .amt-label { font-weight: 600; color: var(--navy); }
+    .lux-summary tr.grand-total td {
+      background: var(--navy);
+      color: var(--gold-light);
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    .lux-summary .empty-left { background: #fff; border-bottom: 1px solid #ebe8e0; }
+
+    /* ── Words + payment ── */
+    .lux-words {
+      background: #fff;
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(201,162,39,0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .lux-words .label { font-weight: 700; color: var(--navy); }
+    .lux-words .payment { margin-top: 8px; }
+
+    .lux-stamp {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .lux-stamp .sig {
+      font-family: "Brush Script MT", cursive;
+      font-size: 24px;
+      color: var(--navy);
+    }
+
+    .lux-stamp .circle {
+      width: 68px;
+      height: 68px;
+      border: 2px solid var(--navy);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 7px;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.2;
+      font-family: Arial, sans-serif;
+    }
+
+    /* ── Footer ── */
+    .lux-footer {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr 0.85fr;
+      gap: 12px;
+    }
+
+    .lux-footer-box {
+      background: #fff;
+      border-radius: 6px;
+      padding: 12px 14px;
+      border-top: 3px solid var(--gold);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      line-height: 1.65;
+    }
+
+    .lux-footer-box .ft-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .lux-footer-box .key { font-weight: 600; color: var(--navy); }
+    .lux-footer-box ol { padding-left: 14px; margin: 0; }
+    .lux-footer-box ol li { margin-bottom: 4px; }
+
+    .lux-sign {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .lux-sign .for-text {
+      font-weight: 600;
+      font-size: 10px;
+      color: var(--navy);
+      align-self: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .lux-sign-box {
+      width: 120px;
+      height: 52px;
+      border: 1px dashed var(--gold);
+      background: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      margin-bottom: 4px;
+    }
+
+    .lux-sign-box span {
+      font-family: "Brush Script MT", cursive;
+      font-size: 20px;
+      color: var(--navy);
+    }
+
+    .lux-sign .sign-label {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .lux-bottom-bar {
+      background: var(--navy);
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      font-family: Arial, sans-serif;
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 8px;
+      margin-top: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-shell">
+    <p class="brand">Hotel White Stone</p>
+    <p class="subtitle">Luxury Invoice Design &middot; WS-2120</p>
+    <button class="btn-download" id="downloadBtn" type="button">
+      <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+      Download Luxury PDF
+    </button>
+    <a class="nav-link" href="index.html">&larr; Classic invoice design</a>
+  </div>
+
+  <div class="invoice-source">
+    <div class="invoice-page" id="invoice">
+
+      <div class="lux-header">
+        <div class="lux-header-inner">
+          <div class="lux-logo">
+            <svg viewBox="0 0 100 100" width="64" height="64" aria-hidden="true">
+              <rect x="18" y="30" width="14" height="50" fill="#c9a227" rx="1"/>
+              <rect x="36" y="18" width="14" height="62" fill="#e8c96a" rx="1"/>
+              <rect x="54" y="8" width="14" height="72" fill="#c9a227" rx="1"/>
+              <path d="M10 82 Q50 95 90 82" stroke="#fff" stroke-width="3" fill="none"/>
+            </svg>
+          </div>
+          <div>
+            <div class="lux-hotel-name">Hotel White Stone</div>
+            <div class="lux-tagline">Premium Stay &middot; Gonda, Uttar Pradesh</div>
+            <div class="lux-address">Opp. Lohiya Dharam Shala, Station Road, Gonda</div>
+          </div>
+          <div class="lux-invoice-badge">
+            <div class="badge-title">Tax Invoice</div>
+            <div class="badge-no"># WS-2120</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lux-contact-bar">
+        <div><span>Phone:</span> 7508501571, 9653025364</div>
+        <div><span>Email:</span> whitestonegonda@gmail.com</div>
+        <div><span>GSTIN:</span> 09AFUPJ6548M2ZF &nbsp;|&nbsp; <span>State:</span> 09-Uttar Pradesh</div>
+      </div>
+
+      <div class="lux-body">
+
+        <div class="lux-cards">
+          <div class="lux-card">
+            <div class="lux-card-head">Bill To</div>
+            <div class="lux-card-body">
+              <div class="guest-name">RAVI TIWARI</div>
+              <div>E323 TRANSPORT NAGAR KANPUR ROAD,</div>
+              <div>Lucknow, Uttar Pradesh-226012, India</div>
+              <div class="row"><span class="key">Contact:</span> 9792888524</div>
+              <div class="row"><span class="key">GSTIN:</span> 09AAACC0444K1ZT</div>
+              <div class="row"><span class="key">State:</span> 09-Uttar Pradesh</div>
+              <div class="row"><span class="key">Company:</span> CENTAUR PHARMA PVT LTD.</div>
+            </div>
+          </div>
+          <div class="lux-card">
+            <div class="lux-card-head">Invoice Details</div>
+            <div class="lux-card-body">
+              <div class="row"><span class="key">Invoice No.:</span> WS-2120</div>
+              <div class="row"><span class="key">Date:</span> 18-06-2026</div>
+              <div class="row"><span class="key">Place of supply:</span> 09-Uttar Pradesh</div>
+              <div class="row"><span class="key">CHK-IN TIME:</span> 07:00 PM</div>
+              <div class="row"><span class="key">CHK-OUT TIME:</span> 08:46 AM</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lux-stay-bar">
+          <div class="lux-stay-item">
+            <div class="label">Room</div>
+            <div class="value">No. 110 &mdash; Luxury AC</div>
+          </div>
+          <div class="lux-stay-item">
+            <div class="label">Stay Duration</div>
+            <div class="value">15/06/2026 &rarr; 18/06/2026 (3 Days)</div>
+          </div>
+          <div class="lux-stay-item">
+            <div class="label">Grand Total</div>
+            <div class="value">&#8377; 3,780.00</div>
+          </div>
+        </div>
+
+        <div class="lux-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:4%">#</th>
+                <th style="width:22%">Item</th>
+                <th style="width:9%">HSN/SAC</th>
+                <th style="width:11%">Chk-In</th>
+                <th style="width:11%">Chk-Out</th>
+                <th style="width:6%">Days</th>
+                <th style="width:11%">Price</th>
+                <th style="width:13%">GST</th>
+                <th style="width:13%">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-center">1</td>
+                <td class="text-left">Room No.110 (LUXURY AC)</td>
+                <td class="text-center">996311</td>
+                <td class="text-center">15/06/2026</td>
+                <td class="text-center">18/06/2026</td>
+                <td class="text-center">3</td>
+                <td class="text-right">&#8377; 1,200.00</td>
+                <td class="text-right">&#8377; 180.00 (5%)</td>
+                <td class="text-right">&#8377; 3,780.00</td>
+              </tr>
+              <tr class="lux-total-row">
+                <td colspan="7" class="text-right">Total</td>
+                <td class="text-right">&#8377; 180.00</td>
+                <td class="text-right">&#8377; 3,780.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="lux-table-wrap">
+          <table class="lux-summary">
+            <thead>
+              <tr>
+                <th style="width:15%">Tax Type</th>
+                <th style="width:26%">Taxable Amt</th>
+                <th style="width:11%">Rate</th>
+                <th style="width:15%">Tax Amt</th>
+                <th colspan="2">Amounts</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-left">SGST</td>
+                <td class="text-right">&#8377; 3,600.00</td>
+                <td class="text-center">2.5%</td>
+                <td class="text-right">&#8377; 90.00</td>
+                <td class="amt-label">Sub Total</td>
+                <td class="text-right">&#8377; 3,780.00</td>
+              </tr>
+              <tr class="grand-total">
+                <td class="text-left">CGST</td>
+                <td class="text-right">&#8377; 3,600.00</td>
+                <td class="text-center">2.5%</td>
+                <td class="text-right">&#8377; 90.00</td>
+                <td class="amt-label">Total</td>
+                <td class="text-right">&#8377; 3,780.00</td>
+              </tr>
+              <tr>
+                <td colspan="4" class="empty-left"></td>
+                <td class="amt-label">Received</td>
+                <td class="text-right">&#8377; 3,780.00</td>
+              </tr>
+              <tr>
+                <td colspan="4" class="empty-left"></td>
+                <td class="amt-label">Balance</td>
+                <td class="text-right">&#8377; 0.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="lux-words">
+          <div>
+            <div><span class="label">Amount in Words:</span> Three Thousand Seven Hundred Eighty Rupees only</div>
+            <div class="payment"><span class="label">Payment Mode:</span> WHITE STONE</div>
+          </div>
+          <div class="lux-stamp">
+            <span class="sig">Ashish</span>
+            <div class="circle">HOTEL<br/>WHITE<br/>STONE</div>
+          </div>
+        </div>
+
+        <div class="lux-footer">
+          <div class="lux-footer-box">
+            <div class="ft-title">Bank Details</div>
+            <div><span class="key">Bank:</span> BANK OF MAHARASHTRA, GONDA</div>
+            <div><span class="key">A/C No.:</span> 60391127456</div>
+            <div><span class="key">IFSC:</span> MAHB0001691</div>
+            <div><span class="key">Holder:</span> WHITE STONE</div>
+          </div>
+          <div class="lux-footer-box">
+            <div class="ft-title">Terms &amp; Conditions</div>
+            <ol>
+              <li>All disputes are subject to Gonda jurisdiction.</li>
+              <li>Hotel CHK-IN: 12:30 PM &nbsp;|&nbsp; CHK-OUT: 11:00 AM.</li>
+              <li>Thank you for choosing HOTEL WHITE STONE for your stay in GONDA.</li>
+            </ol>
+          </div>
+          <div class="lux-footer-box lux-sign">
+            <div class="for-text">For : HOTEL WHITE STONE</div>
+            <div class="lux-sign-box"><span>Ashish</span></div>
+            <div class="sign-label">Authorized Signatory</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="lux-bottom-bar">Thank you for your patronage &middot; Hotel White Stone, Gonda</div>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    (function () {
+      var btn = document.getElementById('downloadBtn');
+      var invoice = document.getElementById('invoice');
+      var PAGE_W = 210, PAGE_H = 297, MARGIN = 10;
+
+      function fitImageToA4(canvas) {
+        var usableW = PAGE_W - MARGIN * 2;
+        var usableH = PAGE_H - MARGIN * 2;
+        var imgW = usableW;
+        var imgH = (canvas.height * imgW) / canvas.width;
+        if (imgH < usableH) {
+          var upH = usableH, upW = (canvas.width * upH) / canvas.height;
+          if (upW <= usableW) { imgH = upH; imgW = upW; }
+        } else if (imgH > usableH) {
+          imgH = usableH;
+          imgW = (canvas.width * imgH) / canvas.height;
+        }
+        return { x: (PAGE_W - imgW) / 2, y: MARGIN, w: imgW, h: imgH };
+      }
+
+      btn.addEventListener('click', function () {
+        if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
+          alert('PDF libraries failed to load. Please refresh and try again.');
+          return;
+        }
+        var originalHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.textContent = 'Generating PDF…';
+
+        var host = document.createElement('div');
+        host.style.cssText = 'position:fixed;left:0;top:0;width:794px;opacity:1;z-index:-1;overflow:hidden;pointer-events:none;';
+        var clone = invoice.cloneNode(true);
+        clone.removeAttribute('id');
+        clone.style.cssText = 'width:794px;max-width:794px;background:#faf8f3;';
+        host.appendChild(clone);
+        document.body.appendChild(host);
+
+        html2canvas(clone, { scale: 2, backgroundColor: '#faf8f3', useCORS: true, logging: false, scrollX: 0, scrollY: 0 })
+          .then(function (canvas) {
+            document.body.removeChild(host);
+            if (canvas.width < 10) throw new Error('Empty capture');
+            var pdf = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait', compress: true });
+            var fit = fitImageToA4(canvas);
+            pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', fit.x, fit.y, fit.w, fit.h, undefined, 'FAST');
+            pdf.save('Hotel-White-Stone-Luxury-Invoice-WS-2120.pdf');
+          })
+          .catch(function (err) {
+            if (host.parentNode) document.body.removeChild(host);
+            alert('PDF failed: ' + err.message);
+          })
+          .finally(function () { btn.disabled = false; btn.innerHTML = originalHtml; });
+      });
+    })();
+  </script>
+</body>
+</html>
