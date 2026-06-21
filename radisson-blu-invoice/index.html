@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tax Invoice - Radisson Blu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --mint: #4ce1b6;
+      --mint-soft: #d4f9ee;
+      --mint-glow: #8ef0d4;
+      --dark: #0d2b24;
+      --dark-mid: #1a4a3d;
+      --navy: #003da5;
+      --navy-deep: #002b75;
+      --cream: #fafcfb;
+      --white: #ffffff;
+      --ink: #14201c;
+      --muted: #6b7a75;
+      --line: #dceee8;
+      --warn: #e07b00;
+      --a4: 794px;
+    }
+
+    html, body { margin: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: linear-gradient(160deg, #0d2b24 0%, #002b75 100%);
+      min-height: 100vh;
+    }
+
+    .shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 40px 24px;
+    }
+
+    .shell .brand {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--mint);
+      letter-spacing: 4px;
+      margin: 0;
+      text-transform: uppercase;
+    }
+
+    .shell .sub {
+      color: rgba(255,255,255,.55);
+      font-size: 13px;
+      margin: 0;
+      letter-spacing: .5px;
+    }
+
+    .btn {
+      margin-top: 4px;
+      padding: 15px 36px;
+      background: var(--mint);
+      color: var(--dark);
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 8px 28px rgba(76,225,182,.35);
+      transition: transform .15s, background .15s;
+    }
+
+    .btn:hover { background: #3bc9a0; transform: translateY(-1px); }
+    .btn:disabled { opacity: .65; cursor: wait; transform: none; }
+
+    .src {
+      position: fixed;
+      left: -9999px;
+      top: 0;
+      width: var(--a4);
+      opacity: 1;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .page {
+      width: var(--a4);
+      background: var(--cream);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* subtle corner accent */
+    .page::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle at top right, rgba(76,225,182,.18), transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ── Header ── */
+    .top {
+      background: var(--white);
+      padding: 22px 28px 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .top-row {
+      display: grid;
+      grid-template-columns: 92px 1fr auto;
+      gap: 18px;
+      align-items: center;
+      padding-bottom: 18px;
+    }
+
+    .logo {
+      width: 84px;
+      height: 84px;
+      background: var(--navy);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(0,45,117,.28);
+    }
+
+    .logo .script {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 15px;
+      font-weight: 600;
+      font-style: italic;
+      color: #fff;
+      line-height: 1;
+      letter-spacing: .5px;
+    }
+
+    .logo .tag {
+      margin-top: 5px;
+      background: #fff;
+      color: var(--navy);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      padding: 2px 6px;
+    }
+
+    .hotel .name {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: 1px;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .hotel .loc {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .hotel .addr {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.5;
+      max-width: 340px;
+    }
+
+    .doc-badge { text-align: right; }
+
+    .doc-badge .title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--dark);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .doc-badge .id {
+      margin-top: 8px;
+      display: inline-block;
+      background: var(--mint-soft);
+      color: var(--dark-mid);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .6px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(76,225,182,.45);
+    }
+
+    .stripe {
+      height: 6px;
+      background: linear-gradient(90deg, var(--mint), var(--mint-glow) 45%, var(--mint));
+    }
+
+    /* ── Meta strip ── */
+    .meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0;
+      background: linear-gradient(180deg, var(--mint-soft) 0%, rgba(212,249,238,.35) 100%);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .meta-col {
+      padding: 14px 20px;
+      border-right: 1px solid rgba(76,225,182,.35);
+      font-size: 10px;
+      line-height: 1.7;
+      color: var(--ink);
+    }
+
+    .meta-col:last-child { border-right: none; }
+
+    .meta-col .head {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--dark-mid);
+      margin-bottom: 6px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid var(--mint);
+      display: inline-block;
+    }
+
+    .meta-col .row { margin-bottom: 2px; }
+    .meta-col .k { font-weight: 600; color: var(--dark-mid); }
+
+    /* ── Body ── */
+    .body { padding: 20px 24px 16px; position: relative; z-index: 1; }
+
+    .parties {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .party {
+      background: var(--white);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: 0 2px 12px rgba(13,43,36,.04);
+    }
+
+    .party-h {
+      background: var(--dark);
+      color: var(--mint);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      padding: 8px 14px;
+    }
+
+    .party-b {
+      padding: 14px 16px;
+      font-size: 11px;
+      line-height: 1.65;
+      color: var(--ink);
+    }
+
+    .party-b .who {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+
+    .party-b .k { font-weight: 600; color: var(--dark-mid); }
+
+    /* Stay ribbon */
+    .ribbon {
+      display: flex;
+      align-items: stretch;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 12px rgba(13,43,36,.04);
+    }
+
+    .ribbon-label {
+      background: var(--mint);
+      color: var(--dark);
+      writing-mode: horizontal-tb;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .ribbon-items {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .ribbon-item {
+      padding: 12px 14px;
+      border-right: 1px solid var(--line);
+    }
+
+    .ribbon-item:last-child { border-right: none; }
+
+    .ribbon-item .lb {
+      font-size: 8.5px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .ribbon-item .vl {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .ribbon-item.highlight {
+      background: rgba(76,225,182,.1);
+    }
+
+    .ribbon-item.highlight .vl { color: var(--dark-mid); }
+
+    /* Billing section */
+    .billing {
+      display: grid;
+      grid-template-columns: 1fr 240px;
+      gap: 14px;
+      margin-bottom: 16px;
+      align-items: start;
+    }
+
+    .items-wrap {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(13,43,36,.04);
+    }
+
+    .items-wrap table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    .items-wrap th {
+      background: var(--dark);
+      color: var(--mint);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      text-align: left;
+    }
+
+    .items-wrap th.r { text-align: right; width: 110px; }
+
+    .items-wrap td {
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+      color: var(--ink);
+    }
+
+    .items-wrap td.r {
+      text-align: right;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .items-wrap td .inr {
+      display: block;
+      font-size: 8px;
+      color: var(--muted);
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    /* Payment panel */
+    .pay-panel {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(13,43,36,.06);
+    }
+
+    .pay-panel-h {
+      background: linear-gradient(135deg, var(--dark), var(--dark-mid));
+      color: #fff;
+      padding: 10px 14px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+
+    .pay-rows { padding: 6px 0; }
+
+    .pay-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 14px;
+      font-size: 10.5px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .pay-row:last-child { border-bottom: none; }
+
+    .pay-row .lbl { color: var(--muted); font-weight: 500; }
+    .pay-row .val { font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink); }
+
+    .pay-row.total {
+      background: rgba(76,225,182,.12);
+    }
+
+    .pay-row.total .lbl,
+    .pay-row.total .val {
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .pay-row.grand {
+      background: var(--dark);
+      border-bottom: none;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .pay-row.grand .lbl { color: rgba(255,255,255,.75); font-weight: 600; }
+    .pay-row.grand .val { color: var(--mint); font-size: 13px; }
+
+    .badge-partial {
+      display: inline-block;
+      background: var(--warn);
+      color: #fff;
+      font-size: 7.5px;
+      font-weight: 800;
+      letter-spacing: .8px;
+      padding: 3px 7px;
+      border-radius: 3px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    .pay-row.paid .val { color: var(--dark-mid); }
+    .pay-row.due {
+      background: #fff8f0;
+    }
+
+    .pay-row.due .lbl { color: var(--warn); font-weight: 700; }
+    .pay-row.due .val { color: var(--warn); font-size: 13px; }
+
+    /* Progress bar */
+    .progress-wrap {
+      padding: 12px 14px 14px;
+      border-top: 1px dashed var(--line);
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--line);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 66.67%;
+      background: linear-gradient(90deg, var(--mint), var(--mint-glow));
+      border-radius: 99px;
+    }
+
+    /* Footer */
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .box {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 10px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .box .warn {
+      color: #c0392b;
+      font-weight: 700;
+      font-size: 10.5px;
+      text-align: center;
+      margin-bottom: 10px;
+      line-height: 1.45;
+    }
+
+    .box .ft {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--dark);
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--mint);
+      display: inline-block;
+    }
+
+    .box .k { font-weight: 600; color: var(--dark-mid); }
+
+    .bottom {
+      background: var(--dark);
+      color: rgba(255,255,255,.55);
+      text-align: center;
+      font-size: 9px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      padding: 10px 20px;
+      border-top: 4px solid var(--mint);
+    }
+
+    .bottom em {
+      font-style: normal;
+      color: var(--mint);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <p class="brand">Design I</p>
+    <p class="sub">White header &middot; payment panel &middot; Ranchi</p>
+    <button class="btn" id="dl">Download PDF</button>
+    <a href="designs.html" style="color:rgba(255,255,255,.45);font-size:12px;text-decoration:none;margin-top:4px">&larr; All designs</a>
+  </div>
+
+  <div class="src"><div class="page" id="inv">
+
+    <div class="top">
+      <div class="top-row">
+        <div class="logo">
+          <div class="script">Radisson</div>
+          <div class="tag">BLU</div>
+        </div>
+        <div class="hotel">
+          <div class="name">Radisson Blu</div>
+          <div class="loc">Hotel &middot; Ranchi, Jharkhand</div>
+          <div class="addr">Main Road, Diversion Rd, Kadru, Hindpiri, Ranchi, Jharkhand 834001, India</div>
+        </div>
+        <div class="doc-badge">
+          <div class="title">Tax Invoice</div>
+          <div class="id">BK-2-20260621-0001</div>
+        </div>
+      </div>
+      <div class="stripe"></div>
+    </div>
+
+    <div class="meta">
+      <div class="meta-col">
+        <div class="head">Booking</div>
+        <div class="row"><span class="k">Booking ID:</span> BK-2-20260621-0001</div>
+        <div class="row"><span class="k">Date:</span> 21 Jun 2026</div>
+        <div class="row"><span class="k">Document Type:</span> Invoice</div>
+        <div class="row"><span class="k">Place of Supply:</span> Ranchi</div>
+      </div>
+      <div class="meta-col">
+        <div class="head">Invoice</div>
+        <div class="row"><span class="k">Invoice No.:</span> INV-2-2026-000058</div>
+        <div class="row"><span class="k">&nbsp;</span> INV-2-2026-000059</div>
+        <div class="row"><span class="k">&nbsp;</span> INV-2-2026-000060</div>
+      </div>
+      <div class="meta-col">
+        <div class="head">Transaction</div>
+        <div class="row"><span class="k">Type / Category:</span> REG / B2C</div>
+        <div class="row"><span class="k">Detail:</span> Reservation</div>
+        <div class="row"><span class="k">Phone:</span> +91 7296096629</div>
+        <div class="row"><span class="k">Email:</span> aryankumar179179@gmail.com</div>
+      </div>
+    </div>
+
+    <div class="body">
+
+      <div class="parties">
+        <div class="party">
+          <div class="party-h">Property</div>
+          <div class="party-b">
+            <div class="who">Radisson Blu</div>
+            Main Road, Diversion Rd, Kadru, Hindpiri, Ranchi, Jharkhand 834001, India<br>
+            <span class="k">Stay:</span> 21 Jun 2026 &ndash; 22 Jun 2026
+          </div>
+        </div>
+        <div class="party">
+          <div class="party-h">Guest Details</div>
+          <div class="party-b">
+            <div class="who">ravi</div>
+            Ranchi, Jharkhand, 098765, IN<br>
+            <span class="k">Phone:</span> 7777777777
+          </div>
+        </div>
+      </div>
+
+      <div class="ribbon">
+        <div class="ribbon-label">Stay Summary</div>
+        <div class="ribbon-items">
+          <div class="ribbon-item">
+            <div class="lb">Room Type</div>
+            <div class="vl">Deluxe Double</div>
+          </div>
+          <div class="ribbon-item">
+            <div class="lb">Rate Plan</div>
+            <div class="vl">Best Available Rate</div>
+          </div>
+          <div class="ribbon-item">
+            <div class="lb">Quantity</div>
+            <div class="vl">1 Room &middot; 1 Night</div>
+          </div>
+          <div class="ribbon-item highlight">
+            <div class="lb">Check-in / Check-out</div>
+            <div class="vl">21 Jun &ndash; 22 Jun 2026</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="billing">
+        <div class="items-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th class="r">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Deluxe Double Room (Best Available Rate) &ndash; 1 Room</td>
+                <td class="r"><span class="inr">INR</span>6,000.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pay-panel">
+          <div class="pay-panel-h">Payment Summary</div>
+          <div class="pay-rows">
+            <div class="pay-row total">
+              <span class="lbl">Total Booking Amount</span>
+              <span class="val">&#8377; 6,000.00</span>
+            </div>
+            <div class="pay-row grand">
+              <span class="lbl">Grand Total <span class="badge-partial">PARTIAL PAID</span></span>
+              <span class="val">&#8377; 6,000.00</span>
+            </div>
+            <div class="pay-row paid">
+              <span class="lbl">Paid Amount</span>
+              <span class="val">&#8377; 4,000.00</span>
+            </div>
+            <div class="pay-row due">
+              <span class="lbl">Remaining Amount</span>
+              <span class="val">&#8377; 2,000.00</span>
+            </div>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-label">
+              <span>Payment Progress</span>
+              <span>67% paid</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-grid">
+        <div class="box">
+          <div class="warn">This is a computer generated Invoice and does not require Signature/Stamp.</div>
+          This invoice is issued by Radisson Blu in respect of accommodation services. The information contained herein is required for the purpose of claiming input tax credit under GST law. Tax is not payable on reverse charge basis.
+        </div>
+        <div class="box">
+          <div class="ft">Invoice Issued By</div>
+          <strong style="color:var(--dark);font-size:11px;">Radisson Blu</strong><br>
+          Main Road, Diversion Rd, Kadru, Hindpiri, Ranchi, Jharkhand 834001, India<br>
+          <span class="k">Phone:</span> +91 7296096629, 9234695101<br>
+          <span class="k">Email:</span> aryankumar179179@gmail.com
+        </div>
+      </div>
+
+    </div>
+
+    <div class="bottom"><em>Service Description:</em> Accommodation / Lodging &amp; Hospitality</div>
+
+  </div></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    document.getElementById('dl').onclick = function () {
+      var b = this, i = document.getElementById('inv'),
+          h = document.createElement('div');
+      h.style.cssText = 'position:fixed;left:0;top:0;width:794px;opacity:1;z-index:-1;overflow:hidden';
+      var c = i.cloneNode(true);
+      c.removeAttribute('id');
+      h.appendChild(c);
+      document.body.appendChild(h);
+      b.disabled = true;
+      b.textContent = 'Generating…';
+      var capture = function () {
+        return html2canvas(c, { scale: 2, backgroundColor: '#fafcfb', useCORS: true, logging: false });
+      };
+      (document.fonts && document.fonts.ready ? document.fonts.ready.then(capture) : capture())
+      .then(function (cv) {
+          document.body.removeChild(h);
+          var p = new jspdf.jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+          var uW = 190, uH = 277, iW = uW, iH = cv.height * iW / cv.width;
+          if (iH < uH) {
+            var u = uH, w = cv.width * u / cv.height;
+            if (w <= uW) { iH = u; iW = w; }
+          } else {
+            iH = uH;
+            iW = cv.width * iH / cv.height;
+          }
+          p.addImage(cv.toDataURL('image/jpeg', .95), 'JPEG', (210 - iW) / 2, 10, iW, iH);
+          p.save('Radisson-Blu-Design-1-BK-2-20260621-0001.pdf');
+        })
+        .catch(function (e) {
+          if (h.parentNode) document.body.removeChild(h);
+          alert(e.message);
+        })
+        .finally(function () {
+          b.disabled = false;
+          b.textContent = 'Download PDF';
+        });
+    };
+  </script>
+</body>
+</html>

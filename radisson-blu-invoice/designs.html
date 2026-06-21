@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Radisson Blu — Invoice Designs</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, sans-serif;
+      background: linear-gradient(160deg, #0d2b24, #002b75);
+      min-height: 100vh;
+      padding: 48px 20px;
+      color: #fff;
+    }
+    h1 {
+      text-align: center;
+      font-size: 30px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      color: #4ce1b6;
+      margin-bottom: 6px;
+    }
+    .sub {
+      text-align: center;
+      color: rgba(255,255,255,.5);
+      font-size: 14px;
+      margin-bottom: 36px;
+    }
+    .grid {
+      max-width: 960px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(76,225,182,.28);
+      border-radius: 12px;
+      padding: 22px 18px;
+      text-align: center;
+      transition: border-color .2s, transform .2s;
+    }
+    .card:hover { border-color: #4ce1b6; transform: translateY(-3px); }
+    .swatch { height: 5px; background: #4ce1b6; border-radius: 3px; margin-bottom: 14px; }
+    .card h3 { font-size: 16px; color: #4ce1b6; margin-bottom: 8px; }
+    .card p { font-size: 11px; color: rgba(255,255,255,.5); line-height: 1.5; margin-bottom: 16px; min-height: 34px; }
+    .card a {
+      display: inline-block;
+      padding: 10px 22px;
+      background: #4ce1b6;
+      color: #0d2b24;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 12px;
+    }
+    .card a:hover { background: #3bc9a0; }
+  </style>
+</head>
+<body>
+  <h1>RADISSON BLU</h1>
+  <p class="sub">Tax Invoice Templates &middot; BK-2-20260621-0001 &middot; Accent #4ce1b6</p>
+  <div class="grid">
+    <div class="card">
+      <div class="swatch"></div>
+      <h3>Design I</h3>
+      <p>White header, mint stripe, payment panel &amp; progress bar</p>
+      <a href="index.html">Open</a>
+    </div>
+    <div class="card">
+      <div class="swatch"></div>
+      <h3>Design II</h3>
+      <p>Dark navy header with meta blocks &amp; full-width table</p>
+      <a href="design-2.html">Open</a>
+    </div>
+    <div class="card">
+      <div class="swatch"></div>
+      <h3>Design III</h3>
+      <p>Mint gradient hero, chips &amp; stacked billing card</p>
+      <a href="design-3.html">Open</a>
+    </div>
+    <div class="card">
+      <div class="swatch"></div>
+      <h3>Design IV</h3>
+      <p>Left mint sidebar with split payment summary cards</p>
+      <a href="design-4.html">Open</a>
+    </div>
+  </div>
+</body>
+</html>

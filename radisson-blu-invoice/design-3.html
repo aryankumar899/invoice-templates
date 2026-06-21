@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Radisson Blu — Design III (Mint Gradient)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    :root{--mint:#4ce1b6;--mint-l:#8ef0d4;--mint-d:#3bc9a0;--dark:#0d2b24;--dark-m:#1a4a3d;--navy:#003da5;--cream:#fafcfb;--white:#fff;--ink:#14201c;--muted:#6b7a75;--line:#dceee8;--warn:#e07b00;--a4:794px}
+    html,body{margin:0}
+    body{font-family:'Inter',system-ui,sans-serif;background:linear-gradient(160deg,#0d2b24,#1a4a3d);min-height:100vh}
+    .shell{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:36px}
+    .shell .brand{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--mint);letter-spacing:3px;margin:0}
+    .shell p{color:rgba(255,255,255,.55);font-size:12px;margin:0}
+    .btn{padding:14px 32px;background:var(--dark);color:var(--mint);border:2px solid var(--mint);border-radius:6px;font-weight:700;font-size:12px;cursor:pointer}
+    .btn:disabled{opacity:.65;cursor:wait}
+    .nav{color:rgba(255,255,255,.45);font-size:12px;text-decoration:none;margin-top:4px}
+    .src{position:fixed;left:-9999px;top:0;width:var(--a4);opacity:1;z-index:-1;overflow:hidden}
+    .page{width:var(--a4);background:var(--white);overflow:hidden}
+
+    .hero{background:linear-gradient(120deg,var(--mint) 0%,var(--mint-l) 45%,var(--mint-d) 100%);padding:24px 26px 20px;color:var(--dark)}
+    .hero-in{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:end}
+    .hero .hotel{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;letter-spacing:1px;line-height:1;margin-bottom:6px}
+    .hero .loc{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;opacity:.75}
+    .hero .doc{text-align:right}
+    .hero .doc .t{font-size:28px;font-weight:800;letter-spacing:2px;text-transform:uppercase;line-height:1}
+    .hero .doc .id{margin-top:6px;font-size:10px;font-weight:700;background:rgba(255,255,255,.45);display:inline-block;padding:4px 10px;border-radius:20px}
+
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+    .chip{background:rgba(255,255,255,.5);backdrop-filter:blur(4px);border:1px solid rgba(13,43,36,.12);border-radius:20px;padding:5px 12px;font-size:9px;font-weight:600}
+    .chip .k{opacity:.7;margin-right:4px}
+
+    .meta-bar{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line);font-size:10px;line-height:1.65}
+    .meta-bar>div{padding:12px 18px;border-right:1px solid var(--line)}
+    .meta-bar>div:last-child{border-right:none}
+    .meta-bar .h{font-size:8px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--dark-m);margin-bottom:4px}
+    .meta-bar .k{font-weight:600;color:var(--dark)}
+
+    .body{padding:18px 22px 14px;background:var(--cream)}
+
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+    .panel{background:var(--white);border-radius:10px;padding:14px 16px;border:1px solid var(--line)}
+    .panel .tag{font-size:8px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--mint-d);margin-bottom:6px}
+    .panel .name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--dark);margin-bottom:6px}
+    .panel .txt{font-size:11px;line-height:1.6;color:var(--ink)}
+    .panel .txt .k{font-weight:600;color:var(--dark-m)}
+
+    .pills{display:flex;gap:8px;margin-bottom:14px}
+    .pill{flex:1;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:10px;text-align:center}
+    .pill .lb{font-size:8px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:600;margin-bottom:4px}
+    .pill .vl{font-size:11px;font-weight:700;color:var(--dark)}
+
+    .bill{background:var(--white);border-radius:10px;border:1px solid var(--line);overflow:hidden;margin-bottom:14px}
+    .bill-h{padding:10px 16px;background:var(--dark);color:var(--mint);font-size:9px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
+    .bill-h .badge-partial{background:var(--warn);color:#fff;font-size:8px;padding:3px 8px;border-radius:3px;letter-spacing:.5px}
+
+    .bill-row{display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line);font-size:11px}
+    .bill-row:last-child{border-bottom:none}
+    .bill-row .lbl{color:var(--muted);font-weight:500}
+    .bill-row .val{font-weight:700;font-variant-numeric:tabular-nums}
+    .bill-row.item .lbl{color:var(--ink);font-weight:600;max-width:70%}
+    .bill-row.sub{background:rgba(76,225,182,.1)}
+    .bill-row.sub .lbl,.bill-row.sub .val{font-weight:700;color:var(--dark)}
+    .bill-row.grand{background:linear-gradient(90deg,var(--dark),var(--dark-m));color:#fff;padding:14px 16px}
+    .bill-row.grand .lbl{color:rgba(255,255,255,.8);font-weight:600}
+    .bill-row.grand .val{color:var(--mint);font-size:14px}
+    .bill-row.due{background:#fff8f0}
+    .bill-row.due .lbl,.bill-row.due .val{color:var(--warn);font-weight:700}
+
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .note{font-size:10px;line-height:1.65;color:var(--muted)}
+    .note .warn{color:#c0392b;font-weight:700;text-align:center;margin-bottom:8px;font-size:10px}
+    .issuer{font-size:10px;line-height:1.65;color:var(--muted);border-left:3px solid var(--mint);padding-left:12px}
+    .issuer .ft{font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--dark);font-size:10px;margin-bottom:6px}
+    .issuer .k{font-weight:600;color:var(--dark-m)}
+
+    .bot{background:var(--dark);color:rgba(255,255,255,.55);text-align:center;font-size:9px;letter-spacing:1.6px;text-transform:uppercase;padding:10px}
+    .bot em{font-style:normal;color:var(--mint);font-weight:700}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <p class="brand">Design III</p>
+    <p>Mint gradient hero &middot; card billing</p>
+    <button class="btn" id="dl">Download PDF</button>
+    <a class="nav" href="designs.html">&larr; All designs</a>
+  </div>
+  <div class="src"><div class="page" id="inv">
+    <div class="hero">
+      <div class="hero-in">
+        <div>
+          <div class="hotel">Radisson Blu</div>
+          <div class="loc">Hotel &middot; Ranchi, Jharkhand</div>
+        </div>
+        <div class="doc"><div class="t">Tax Invoice</div><div class="id">BK-2-20260621-0001</div></div>
+      </div>
+      <div class="chips">
+        <div class="chip"><span class="k">Date</span>21 Jun 2026</div>
+        <div class="chip"><span class="k">Supply</span>Ranchi</div>
+        <div class="chip"><span class="k">Type</span>REG / B2C</div>
+        <div class="chip"><span class="k">Detail</span>Reservation</div>
+        <div class="chip"><span class="k">Stay</span>21 Jun &ndash; 22 Jun 2026</div>
+      </div>
+    </div>
+    <div class="meta-bar">
+      <div><div class="h">Invoice Numbers</div><div>INV-2-2026-000058</div><div>INV-2-2026-000059</div><div>INV-2-2026-000060</div></div>
+      <div><div class="h">Property</div><div>Main Road, Diversion Rd, Kadru, Hindpiri, Ranchi, Jharkhand 834001, India</div></div>
+      <div><div class="h">Contact</div><div><span class="k">Phone:</span> +91 7296096629, 9234695101</div><div><span class="k">Email:</span> aryankumar179179@gmail.com</div></div>
+    </div>
+    <div class="body">
+      <div class="grid2">
+        <div class="panel"><div class="tag">Property</div><div class="name">Radisson Blu</div><div class="txt">Main Road, Diversion Rd, Kadru, Hindpiri, Ranchi, Jharkhand 834001, India</div></div>
+        <div class="panel"><div class="tag">Guest</div><div class="name">ravi</div><div class="txt">Ranchi, Jharkhand, 098765, IN<br><span class="k">Phone:</span> 7777777777</div></div>
+      </div>
+      <div class="pills">
+        <div class="pill"><div class="lb">Room</div><div class="vl">Deluxe Double</div></div>
+        <div class="pill"><div class="lb">Rate</div><div class="vl">Best Available</div></div>
+        <div class="pill"><div class="lb">Qty</div><div class="vl">1 Room</div></div>
+        <div class="pill"><div class="lb">Nights</div><div class="vl">1 Night</div></div>
+      </div>
+      <div class="bill">
+        <div class="bill-h"><span>Charges &amp; Payment</span><span class="badge-partial">PARTIAL PAID</span></div>
+        <div class="bill-row item"><span class="lbl">Deluxe Double Room (Best Available Rate) &ndash; 1 Room</span><span class="val">&#8377; 6,000.00</span></div>
+        <div class="bill-row sub"><span class="lbl">Total Booking Amount</span><span class="val">&#8377; 6,000.00</span></div>
+        <div class="bill-row grand"><span class="lbl">Grand Total</span><span class="val">&#8377; 6,000.00</span></div>
+        <div class="bill-row"><span class="lbl">Paid Amount</span><span class="val">&#8377; 4,000.00</span></div>
+        <div class="bill-row due"><span class="lbl">Remaining Amount</span><span class="val">&#8377; 2,000.00</span></div>
+      </div>
+      <div class="split">
+        <div class="note"><div class="warn">This is a computer generated Invoice and does not require Signature/Stamp.</div>This invoice is issued by Radisson Blu for accommodation services. Required for GST input tax credit. Tax is not payable on reverse charge basis.</div>
+        <div class="issuer"><div class="ft">Invoice Issued By</div><strong style="color:var(--dark)">Radisson Blu</strong><br>Main Road, Diversion Rd, Kadru, Hindpiri, Ranchi, Jharkhand 834001, India<br><span class="k">Phone:</span> +91 7296096629, 9234695101<br><span class="k">Email:</span> aryankumar179179@gmail.com</div>
+      </div>
+    </div>
+    <div class="bot"><em>Service Description:</em> Accommodation / Lodging &amp; Hospitality</div>
+  </div></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    document.getElementById('dl').onclick=function(){var b=this,i=document.getElementById('inv'),h=document.createElement('div');h.style.cssText='position:fixed;left:0;top:0;width:794px;opacity:1;z-index:-1;overflow:hidden';var c=i.cloneNode(true);c.removeAttribute('id');h.appendChild(c);document.body.appendChild(h);b.disabled=true;b.textContent='Generating…';var cap=function(){return html2canvas(c,{scale:2,backgroundColor:'#fafcfb',useCORS:true,logging:false})};(document.fonts&&document.fonts.ready?document.fonts.ready.then(cap):cap()).then(function(cv){document.body.removeChild(h);var p=new jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait'});var uW=190,uH=277,iW=uW,iH=cv.height*iW/cv.width;if(iH<uH){var u=uH,w=cv.width*u/cv.height;if(w<=uW){iH=u;iW=w}}else{iH=uH;iW=cv.width*iH/cv.height}p.addImage(cv.toDataURL('image/jpeg',.95),'JPEG',(210-iW)/2,10,iW,iH);p.save('Radisson-Blu-Design-3-BK-2-20260621-0001.pdf')}).catch(function(e){if(h.parentNode)document.body.removeChild(h);alert(e.message)}).finally(function(){b.disabled=false;b.textContent='Download PDF'})};
+  </script>
+</body>
+</html>
